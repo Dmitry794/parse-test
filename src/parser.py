@@ -3,8 +3,9 @@ from lxml import html
 
 class Parser:
 
-    def __init__(self, html):
-        self.html = html
+    def __init__(self, htmlstr):
+        # self.html = html
+        self.html = html.fromstring(htmlstr)
 
     def get_sku(self):
         sku = None
@@ -18,7 +19,9 @@ class Parser:
     def get_dimensions(self):
         dimensions = {}
         try:
-            (dl,) = self.html.xpath("//li[@class='p-col-child p-chapter-to-toggle']/p[@class='p-heading-03 p-spec-title'][text()='Dimensions']")[0].getparent().xpath('./dl')
+            (dl,) = self.html.xpath(
+                "//li[@class='p-col-child p-chapter-to-toggle']/p[@class='p-heading-03 p-spec-title'][text()='Dimensions']")[
+                0].getparent().xpath('./dl')
             dimensions_size = len(dl.xpath('./dt'))
             for i in range(1, dimensions_size + 1):
                 try:
@@ -33,7 +36,7 @@ class Parser:
         return dimensions
 
     def parse(self):
-        self.html = html.fromstring(self.html)
+
         sku = self.get_sku()
         dim = self.get_dimensions()
         print(f'SKU: {sku}')
